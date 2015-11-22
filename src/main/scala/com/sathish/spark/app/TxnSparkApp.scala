@@ -23,6 +23,7 @@ object TxnSparkApp extends App {
   import sqlContext.implicits._
 
   val txnData = sc.textFile(file,  10).cache()
+//  sc.cassandraTable()
 
   val formatter = new SimpleDateFormat("MM-dd-yyyy")
 
