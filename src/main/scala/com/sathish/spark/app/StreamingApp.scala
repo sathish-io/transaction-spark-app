@@ -21,8 +21,9 @@ object StreamingApp extends  App {
   val kafkaParams = Map[String, String]("metadata.broker.list" -> "host1:9092")
   val messages = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topics)
 
-  messages.map(_._2).flatMap((_.split(" "))).map(x => (x, 1L)).reduceByKey(_ + _).map(x => ( System.currentTimeMillis(), x._1, x._2))
+  messages.map(_._2).flatMap(_.split(" ")).map(x => (x, 1L)).reduceByKey(_ + _).map(x => ( System.currentTimeMillis(), x._1, x._2))
     .saveToCassandra("sparkdb", "word_count", SomeColumns("event_time", "word", "total_count"))
+    
 
   ssc.start()
   ssc.awaitTermination()
